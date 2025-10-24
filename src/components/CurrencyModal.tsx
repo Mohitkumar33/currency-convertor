@@ -3,9 +3,6 @@ import { X, RefreshCw } from "lucide-react";
 import CurrencyChart from "./CurrencyChart";
 import { ExchangeRates, HistoricalDataPoint } from "@/types/currency";
 
-const API_KEY = "fca_live_kJYwwrthUha9vutdDOarE9ETMt4Nd7wadI2OeEgC";
-const BASE_URL = "https://api.freecurrencyapi.com/v1";
-
 interface Props {
   baseCurrency: string;
   currencyCode: string;
@@ -34,7 +31,7 @@ const CurrencyModal: React.FC<Props> = ({
           const ds = d.toISOString().split("T")[0];
           promises.push(
             fetch(
-              `${BASE_URL}/historical?apikey=${API_KEY}&date=${ds}&base_currency=${baseCurrency}&currencies=${currencyCode}`
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/historical?apikey=${process.env.NEXT_PUBLIC_API_KEY}&date=${ds}&base_currency=${baseCurrency}&currencies=${currencyCode}`
             )
               .then((r) => r.json())
               .then((res) => ({
@@ -46,13 +43,11 @@ const CurrencyModal: React.FC<Props> = ({
         const result = await Promise.all(promises);
         setData(result.filter((r) => r.rate > 0));
       } catch {
-        const mock = Array.from({ length: 14 }).map((_, i) => ({
-          date: new Date(Date.now() - i * 86400000)
-            .toISOString()
-            .split("T")[0],
+        const fallbackData = Array.from({ length: 14 }).map((_, i) => ({
+          date: new Date(Date.now() - i * 86400000).toISOString().split("T")[0],
           rate: (rates[currencyCode] || 1) * (0.98 + Math.random() * 0.04),
         }));
-        setData(mock.reverse());
+        setData(fallbackData.reverse());
       } finally {
         setLoading(false);
       }
@@ -70,7 +65,7 @@ const CurrencyModal: React.FC<Props> = ({
   })();
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
@@ -97,15 +92,21 @@ const CurrencyModal: React.FC<Props> = ({
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     Highest:{" "}
-                    <span className="font-semibold">{stats.highest.toFixed(4)}</span>
+                    <span className="font-semibold">
+                      {stats.highest.toFixed(4)}
+                    </span>
                   </div>
                   <div>
                     Lowest:{" "}
-                    <span className="font-semibold">{stats.lowest.toFixed(4)}</span>
+                    <span className="font-semibold">
+                      {stats.lowest.toFixed(4)}
+                    </span>
                   </div>
                   <div>
                     Average:{" "}
-                    <span className="font-semibold">{stats.average.toFixed(4)}</span>
+                    <span className="font-semibold">
+                      {stats.average.toFixed(4)}
+                    </span>
                   </div>
                   <div>
                     Current:{" "}
