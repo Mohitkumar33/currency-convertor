@@ -8,3 +8,8 @@ export interface Currency {
 export interface ExchangeRates {
   [key: string]: number;
 }
+
+export interface HistoricalDataPoint {
+  date: string;
+  rate: number;
+}

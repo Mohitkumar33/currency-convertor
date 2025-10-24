@@ -4,12 +4,14 @@ import CurrencyInput from "./CurrencyInput";
 import ConvertedList from "./ConvertedList";
 import { ExchangeRates } from "@/types/currency";
 import { TARGET_CURRENCIES } from "@/constants/app.const";
+import CurrencyModal from "./CurrencyModal";
 
 const CurrencyConverter: React.FC = () => {
   const [audAmount, setAudAmount] = useState(100);
   const [rates, setRates] = useState<ExchangeRates>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
 
   const fetchRates = async (): Promise<void> => {
     setLoading(true);
@@ -64,10 +66,19 @@ const CurrencyConverter: React.FC = () => {
             targetCurrencies={TARGET_CURRENCIES}
             rates={rates}
             audAmount={audAmount}
-            onSelect={() => {}}
+            onSelect={setSelectedCurrency}
           />
         </div>
       </div>
+
+      {selectedCurrency && (
+        <CurrencyModal
+          baseCurrency="AUD"
+          currencyCode={selectedCurrency}
+          rates={rates}
+          onClose={() => setSelectedCurrency(null)}
+        />
+      )}
     </div>
   );
 };
