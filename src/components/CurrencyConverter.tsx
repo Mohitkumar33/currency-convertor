@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import CurrencyInput from "./CurrencyInput";
+import ConvertedList from "./ConvertedList";
+import { TARGET_CURRENCIES } from "@/constants/app.const";
 
 const CurrencyConverter: React.FC = () => {
   const [audAmount, setAudAmount] = useState(100);
@@ -23,6 +25,13 @@ const CurrencyConverter: React.FC = () => {
             onChange={setAudAmount}
             onRefresh={() => {}}
             loading={false}
+          />
+
+          <ConvertedList
+            targetCurrencies={TARGET_CURRENCIES}
+            rates={{}}
+            audAmount={audAmount}
+            onSelect={() => {}}
           />
         </div>
       </div>
