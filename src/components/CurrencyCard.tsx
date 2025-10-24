@@ -9,6 +9,15 @@ interface Props {
   onClick: () => void;
 }
 
+const currencyLogos: Record<string, string> = {
+  AUD: "/assets/australia.png",
+  USD: "/assets/usa.png",
+  EUR: "/assets/new.png",
+  GBP: "/assets/united-kingdom.png",
+  JPY: "/assets/japan.png",
+  CAD: "/assets/canada.png",
+};
+
 const CurrencyCard: React.FC<Props> = ({ currency, rate, amount, onClick }) => {
   const converted = rate ? (amount * rate).toFixed(2) : "0.00";
   return (
@@ -17,8 +26,16 @@ const CurrencyCard: React.FC<Props> = ({ currency, rate, amount, onClick }) => {
       className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-blue-50 cursor-pointer transition-all hover:shadow-md group"
     >
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-          {currency.code[0]}
+        <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg">
+          {currencyLogos[currency.code] ? (
+            <img
+              src={currencyLogos[currency.code]}
+              alt={currency.code}
+              className="w-12 h-12 object-contain"
+            />
+          ) : (
+            currency.code[0]
+          )}
         </div>
         <div>
           <div className="font-semibold text-gray-800">{currency.code}</div>
